@@ -1,2 +1,1 @@
-✅ Wildlife Conservation Monitoring Assignment,
-✅ using PostgreSQL, including table creation, data insertion
+✅ Wildlife Conservation Monitoring Assignment,using PostgreSQL, including table creation, data insertion
