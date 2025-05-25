@@ -24,8 +24,6 @@ VALUES (
 
 SELECT * FROM rangers;
 
-DROP Table rangers;
-
 -- 2 Create species table
 CREATE TABLE species (
     species_id SERIAL PRIMARY KEY,
@@ -131,7 +129,7 @@ VALUES (
 
 SELECT * FROM sightings;
 
--- - Problem 1️⃣ : Register a new ranger with provided data with name = 'Derek Fox' and region = 'Coastal Plains'
+-- - Problem 1 : Register a new ranger with provided data with name = 'Derek Fox' and region = 'Coastal Plains'
 
 INSERT INTO
     rangers (ranger_id, name, region)
@@ -139,9 +137,8 @@ VALUES (
         4,
         'Derek Fox',
         'Coastal Plains'
-    );
-
-SELECT * FROM rangers WHERE name = 'Derek Fox';
+    ); 
+SELECT * FROM rangers WHERE name = 'Derek Fox'; 
 
 SELECT * FROM rangers;
 
@@ -149,12 +146,12 @@ SELECT * FROM species;
 
 SELECT * FROM sightings;
 
--- - Problem  2️⃣: Count unique species ever sighted
+-- - Problem  2 : Count unique species ever sighted
 
 SELECT COUNT(DISTINCT species_id) AS unique_species_count
 FROM sightings;
 
--- Problem 3️⃣ Find all sightings where the location includes "Pass".
+-- Problem 3 Find all sightings where the location includes "Pass".
 
 SELECT * FROM sightings;
 
@@ -165,38 +162,75 @@ SELECT * FROM sightings WHERE location ~* 'Snowfall';
 
 SELECT * FROM sightings WHERE location LIKE '%Pass';
 
--- problem 4️⃣ List each ranger's name and their total number of sightings.
+-- problem 4 List each ranger's name and their total number of sightings.
 --short name / alias
 
-SELECT * FROM sightings ;
+SELECT * FROM sightings;
 
-SELECT r.name , COUNT(s.sighting_id) AS total_sightings_number 
-FROM rangers r 
-LEFT JOIN sightings s ON r.ranger_id = s.ranger_id
-GROUP BY r.name ;
+SELECT r.name, COUNT(s.sighting_id) AS total_sightings_number
+FROM rangers r
+    LEFT JOIN sightings s ON r.ranger_id = s.ranger_id
+GROUP BY
+    r.name;
 
--- Problem 5️⃣ List species that have never been sighted.
-SELECT * FROM species ;
-SELECT * FROM rangers ;
-SELECT * FROM sightings ;
+-- Problem 5 List species that have never been sighted.
+SELECT * FROM species;
+
+SELECT * FROM rangers;
+
+SELECT * FROM sightings;
 
 -- FROM species
-SELECT common_name AS common_name_sighted
- FROM species 
-WHERE species_id NOT IN (SELECT DISTINCT species_id FROM sightings ) ;
+SELECT
+    common_name AS common_name_sighted
+FROM species
+WHERE
+    species_id NOT IN (
+        SELECT DISTINCT
+            species_id
+        FROM sightings
+    );
 
+-- Problem 6 Show the most recent 2 sightings.
 
+SELECT * FROM rangers;
 
--- Problem 6️⃣ Show the most recent 2 sightings.
+SELECT * FROM species;
 
-SELECT * FROM rangers ;
-SELECT * FROM species ;
-SELECT * FROM sightings ;
+SELECT * FROM sightings;
 
-SELECT sp.common_name , s.sighting_time , r.name
-FROM sightings s 
-JOIN species sp ON s.species_id = sp.species_id
-JOIN rangers r ON s.ranger_id = r.ranger_id
+SELECT sp.common_name, s.sighting_time, r.name
+FROM
+    sightings s
+    JOIN species sp ON s.species_id = sp.species_id
+    JOIN rangers r ON s.ranger_id = r.ranger_id
 ORDER BY sighting_time DESC
-LIMIT 2 ;
+LIMIT 2;
 
+-- Problem 7 Update all species discovered before year 1800 to have status 'Historic'.
+
+SELECT * FROM species;
+
+UPDATE species
+SET
+    conservation_status = 'Historic'
+WHERE
+    discovery_date < '1800-01-01';
+
+-- Problem : 8 Label each sighting's time of day as 'Morning', 'Afternoon', or 'Evening'.
+
+SELECT * FROM sightings;
+
+SELECT sighting_id ,
+ CASE 
+ WHEN EXTRACT(HOUR FROM sighting_time) < 12 THEN  'Morning'
+ WHEN EXTRACT (HOUR FROM sighting_time) BETWEEN 12 AND 17 THEN 'Afternoon'
+ ELSE 'Evening'
+ END  AS time_of_day
+ FROM sightings ;
+
+ -- Problem 9 Delete rangers who have never sighted any species
+SELECT * FROM rangers ;
+SELECT * FROM sightings ;
+ DELETE FROM rangers 
+ WHERE ranger_id NOT IN(SELECT DISTINCT ranger_id FROM sightings);
