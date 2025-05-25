@@ -177,7 +177,7 @@ GROUP BY r.name ;
 
 -- Problem 5️⃣ List species that have never been sighted.
 SELECT * FROM species ;
-
+SELECT * FROM rangers ;
 SELECT * FROM sightings ;
 
 -- FROM species
@@ -199,3 +199,4 @@ JOIN species sp ON s.species_id = sp.species_id
 JOIN rangers r ON s.ranger_id = r.ranger_id
 ORDER BY sighting_time DESC
 LIMIT 2 ;
+
